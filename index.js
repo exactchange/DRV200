@@ -39,7 +39,7 @@ module.exports = ({ drv, peers, serviceEvents }) => {
       sender,
       recipient,
       recipientAddress,
-      contract: 'DRV100',
+      contract: 'DRV200',
       usdValue,
       drvValue,
       isDrv: true
