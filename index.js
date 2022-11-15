@@ -66,7 +66,7 @@ module.exports = ({ drv, peers, serviceEvents }) => {
               content
             },
             route: {
-              path: '/'
+              path: 'fs'
             },
             path: 'store'
           },
@@ -87,7 +87,8 @@ module.exports = ({ drv, peers, serviceEvents }) => {
           }
         );
 
-        const fileName = file.split('/')[1];
+        // TODO: Flatten nested `onHttpPost` responses
+        const fileName = file.data.data.split('/')[1];
 
         // eslint-disable-next-line no-param-reassign
         drvValue = `::magnet=?xt=urn:drv/${contentType}:${fileName}&dn=${capitalizeSlug(contentType)}`;
