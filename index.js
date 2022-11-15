@@ -52,7 +52,7 @@ module.exports = ({ drv, peers, serviceEvents }) => {
          */
 
         // eslint-disable-next-line no-param-reassign
-        drvValue = `::magnet=?xt=urn:drv/text&dn=${encodeURIComponent(content)}&ts=${Date.now()}`;
+        drvValue = `::magnet:?xt=urn:drv/text&dn=${encodeURIComponent(content)}&ts=${Date.now()}`;
       } else {
 
         /*
@@ -91,7 +91,7 @@ module.exports = ({ drv, peers, serviceEvents }) => {
         const fileName = file.data.data.split('/')[1];
 
         // eslint-disable-next-line no-param-reassign
-        drvValue = `::magnet=?xt=urn:drv/${contentType}:${fileName}&dn=${capitalizeSlug(contentType)}`;
+        drvValue = `::magnet:?xt=urn:drv/${contentType}:${fileName}&dn=${capitalizeSlug(contentType)}`;
       }
     }
 
