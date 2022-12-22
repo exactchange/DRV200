@@ -30,8 +30,7 @@ module.exports = ({ drv, peers, serviceEvents }) => {
    */
 
   const Contract = async ({
-    sender,
-    recipient,
+    senderAddress,
     recipientAddress,
     usdValue,
     drvValue = 'data:drv/text;text,Hello world!'
@@ -100,8 +99,7 @@ module.exports = ({ drv, peers, serviceEvents }) => {
      */
 
     return DRVContract({
-      sender,
-      recipient,
+      senderAddress,
       recipientAddress,
       contract: 'DRV200',
       usdValue,
