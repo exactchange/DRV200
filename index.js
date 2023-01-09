@@ -1,13 +1,13 @@
 /* eslint-disable no-magic-numbers */
 
-/*
- *
+/**
  * Decentralized Record of Value
  * DRV200: Non-Fungible Record
- *
  */
 
 const { capitalizeSlug } = require('cryptography-utilities');
+
+const isValid = require('./validations');
 
 module.exports = ({ drv, peers, serviceEvents }) => {
 
@@ -21,7 +21,7 @@ module.exports = ({ drv, peers, serviceEvents }) => {
     serviceEvents
   });
 
-  /*
+  /**
    * Define a contract that: Accepts an encoded string as
    * the DRV value instead of a number, creates a file,
    * populates it with the encoded content as formatted JSON,
@@ -35,66 +35,68 @@ module.exports = ({ drv, peers, serviceEvents }) => {
     usdValue,
     drvValue = 'data:drv/text;text,Hello world!'
   }) => {
-    if (drvValue.substring(0, 9) === 'data:drv/') {
-      const encoding = drvValue.substring(9, 13) === 'text' ? 'text' : 'json';
-      const drvContent = drvValue.split(`;${encoding}`);
-      const contentType = drvContent[0].replace(/data:drv\//, '');
+    if (
+      drvValue.substring(0, 9) !== 'data:drv/' ||
+      !isValid({ drvValue })
+    ) return false;
 
-      const content = encoding === 'text'
-        ? drvValue.split(/data\:drv\/.*;text,/)[1]
-        : drvValue.split(/data\:drv\/.*;json,/)[1];
+    const encoding = drvValue.substring(9, 13) === 'text' ? 'text' : 'json';
+    const drvContent = drvValue.split(`;${encoding}`);
+    const contentType = drvContent[0].replace(/data:drv\//, '');
 
-      if (encoding === 'text') {
+    const content = encoding === 'text'
+      ? drvValue.split(/data\:drv\/.*;text,/)[1]
+      : drvValue.split(/data\:drv\/.*;json,/)[1];
 
-        /*
-         * Save text records directly on-chain
-         */
+    if (encoding === 'text') {
+      /**
+       * Save text records directly on-chain
+       */
 
-        // eslint-disable-next-line no-param-reassign
-        drvValue = `::magnet:?xt=urn:drv/text&dn=${encodeURIComponent(content)}&ts=${Date.now()}`;
-      } else {
+      // eslint-disable-next-line no-param-reassign
+      drvValue = `::magnet:?xt=urn:drv/text&dn=${encodeURIComponent(content)}&ts=${Date.now()}`;
+    } else {
 
-        /*
-         * Cache JSON records in DSS
-         */
+      /**
+       * Cache JSON records in DSS
+       */
 
-        const file = await drv.onHttpPost(
-          {
-            method: 'store',
-            body: {
-              content
-            },
-            route: {
-              path: 'fs'
-            },
-            path: 'store'
+      const file = await drv.onHttpPost(
+        {
+          method: 'store',
+          body: {
+            content
           },
-          {
-            status: code => ({
-              end: () => ({
-                error: {
-                  code,
-                  message: '<DRV200> Contract error (POST).'
-                }
-              })
-            }),
-            send: body => ({
-              status: 200,
-              success: true,
-              data: body
+          route: {
+            path: 'fs'
+          },
+          path: 'store'
+        },
+        {
+          status: code => ({
+            end: () => ({
+              error: {
+                code,
+                message: '<DRV200> Contract error (POST).'
+              }
             })
-          }
-        );
+          }),
+          send: body => ({
+            status: 200,
+            success: true,
+            data: body
+          })
+        }
+      );
 
-        // TODO: Flatten nested `onHttpPost` responses
-        const fileName = file.data.data.split('/')[1];
+      // TODO: Flatten nested `onHttpPost` responses
+      const fileName = file.data.data.split('/')[1];
 
-        // eslint-disable-next-line no-param-reassign
-        drvValue = `::magnet:?xt=urn:drv/${contentType}:${fileName}&dn=${capitalizeSlug(contentType)}`;
-      }
+      // eslint-disable-next-line no-param-reassign
+      drvValue = `::magnet:?xt=urn:drv/${contentType}:${fileName}&dn=${capitalizeSlug(contentType)}`;
     }
 
-    /*
+    /**
      * Invoke the modified DRV100 with the encoded record.
      */
 
