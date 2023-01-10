@@ -98,7 +98,7 @@ module.exports = input => {
 
   switch (input.type) {
     case 'Alias':
-      const isValidName = /^[a-z0-9_.]{2,16}$/i.test(input.name);
+      const isValidName = /^[a-z0-9-.]{2,64}$/i.test(input.name);
 
       if (!isValidName) return false;
 
