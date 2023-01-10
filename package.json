@@ -1,8 +1,8 @@
 {
   "name": "drv200",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "dependencies": {
     "cryptography-utilities": "^0.0.2",
-    "drv100": "^0.0.6"
+    "drv100": "^0.0.7"
   }
 }
