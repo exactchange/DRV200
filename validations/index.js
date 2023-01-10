@@ -87,7 +87,7 @@ module.exports = input => {
 
   if (
     !toArray(DRV200Input.type).includes(input?.type) ||
-    !isISODate(input?.datetime?.trim().toLowerCase())
+    !isISODate(input?.datetime?.trim())
   ) {
     return false;
   }
@@ -104,7 +104,7 @@ module.exports = input => {
 
       const isValidAuth = (
         toArray(Alias.auth.type).includes(input.auth?.type) &&
-        typeof (Alias.auth.value) === typeof (input.auth?.value)
+        Alias.auth.value === typeof (input.auth?.value)
       );
 
       if (!isValidAuth) return false;
@@ -113,13 +113,13 @@ module.exports = input => {
 
     case 'Comment':
       const isValidAuthor = (
-        typeof (Comment.author) === typeof (input.author)
+        Comment.author === typeof (input.author)
       );
 
       if (!isValidAuthor) return false;
 
       const isValidText = (
-        typeof (Comment.text) === typeof (input.text) &&
+        Comment.text === typeof (input.text) &&
         /^.{2,280}$/i.test(input.text)
       );
 
@@ -129,21 +129,21 @@ module.exports = input => {
 
     case 'Collectible':
       const isValidVintage = (
-        typeof (Collectible.vintage) === typeof (input.vintage) &&
+        Collectible.vintage === typeof (input.vintage) &&
         `${input.vintage}`.length < 5
       );
 
       if (!isValidVintage) return false;
 
       const isValidMake = (
-        typeof (Collectible.make) === typeof (input.make) &&
+        Collectible.make === typeof (input.make) &&
         /^.{2,200}$/i.test(input.make)
       );
 
       if (!isValidMake) return false;
 
       const isValidModel = (
-        typeof (Collectible.model) === typeof (input.model) &&
+        Collectible.model === typeof (input.model) &&
         /^.{2,200}$/i.test(input.model)
       );
 
@@ -156,7 +156,7 @@ module.exports = input => {
       if (!isValidCondition) return false;
 
       const isValidAppraisal = (
-        typeof (Collectible.appraisal) === typeof (input.appraisal)
+        Collectible.appraisal === typeof (input.appraisal)
       );
 
       if (!isValidAppraisal) return false;
@@ -168,12 +168,14 @@ module.exports = input => {
       if (!isValidAppraisalCurrency) return false;
 
       const isValidValue = (
-        typeof (Collectible.value) === typeof (input.value)
+        Collectible.value === typeof (input.value)
       );
 
       if (!isValidValue) return false;
 
       return true;
   }
+
+  return false;
 };
 
