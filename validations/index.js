@@ -79,9 +79,7 @@ const isISODate = (string = '') => {
   );
 };
 
-module.exports = ({ drvValue }) => {
-  const input = JSON.parse(drvValue);
-
+module.exports = input => {
   /**
    * Validate `type` and `datetime` for all
    * content types

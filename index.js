@@ -10,7 +10,6 @@ const { capitalizeSlug } = require('cryptography-utilities');
 const isValid = require('./validations');
 
 module.exports = ({ drv, peers, serviceEvents }) => {
-
   /*
    * Import DRV100 for its transfer logic.
    */
@@ -35,11 +34,6 @@ module.exports = ({ drv, peers, serviceEvents }) => {
     usdValue,
     drvValue = 'data:drv/text;text,Hello world!'
   }) => {
-    if (
-      drvValue.substring(0, 9) !== 'data:drv/' ||
-      !isValid({ drvValue })
-    ) return false;
-
     const encoding = drvValue.substring(9, 13) === 'text' ? 'text' : 'json';
     const drvContent = drvValue.split(`;${encoding}`);
     const contentType = drvContent[0].replace(/data:drv\//, '');
@@ -47,6 +41,11 @@ module.exports = ({ drv, peers, serviceEvents }) => {
     const content = encoding === 'text'
       ? drvValue.split(/data\:drv\/.*;text,/)[1]
       : drvValue.split(/data\:drv\/.*;json,/)[1];
+
+    if (
+      drvValue.substring(0, 9) !== 'data:drv/' ||
+      !isValid(JSON.parse(content))
+    ) return false;
 
     if (encoding === 'text') {
       /**
