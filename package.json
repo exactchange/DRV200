@@ -1,6 +1,6 @@
 {
   "name": "drv200",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "dependencies": {
     "cryptography-utilities": "^0.0.2",
     "drv100": "^0.0.7"

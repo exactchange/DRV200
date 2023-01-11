@@ -28,6 +28,7 @@ const Alias = {
   ...DRV200Input,
 
   type: 'Alias',
+  address: 'string',
   name: 'string',
   auth: {
     ...Authentication
@@ -101,6 +102,10 @@ module.exports = input => {
       const isValidName = /^[a-z0-9-.]{2,64}$/i.test(input.name);
 
       if (!isValidName) return false;
+
+      const isValidAddress = input.address?.length === 36;
+
+      if (!isValidAddress) return false;
 
       const isValidAuth = (
         toArray(Alias.auth.type).includes(input.auth?.type) &&
